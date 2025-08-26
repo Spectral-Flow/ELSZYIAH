@@ -1,0 +1,86 @@
+{
+  "name": "elysia-concierge",
+  "version": "1.0.0",
+  "description": "AI-powered concierge system for The Avant luxury apartments - Kairoi Residential",
+  "keywords": [
+    "property-management",
+    "concierge",
+    "apartment-living",
+    "ai-assistant",
+    "resident-services",
+    "the-avant",
+    "kairoi-residential"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kairoi-residential/elysia-concierge.git"
+  },
+  "scripts": {
+    "setup:dev": "npm run setup:backend && npm run setup:frontend && npm run setup:mobile",
+    "setup:backend": "cd backend && python -m venv venv && pip install -r requirements.txt",
+    "setup:frontend": "cd frontend && npm install",
+    "setup:mobile": "cd mobile && npm install && npx pod-install ios",
+    
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:mobile\"",
+    "dev:backend": "cd backend && python -m starlite run elysia_concierge:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:mobile": "cd mobile && npx react-native start",
+    "dev:mobile:ios": "cd mobile && npx react-native run-ios",
+    "dev:mobile:android": "cd mobile && npx react-native run-android",
+    
+    "build:frontend": "cd frontend && npm run build",
+    "build:mobile:ios": "cd mobile && npx react-native run-ios --configuration Release",
+    "build:mobile:android": "cd mobile && npx react-native run-android --variant release",
+    
+    "test:backend": "cd backend && python -m pytest tests/ -v",
+    "test:frontend": "cd frontend && npm run test",
+    "test:mobile": "cd mobile && npm test",
+    "test:all": "npm run test:backend && npm run test:frontend && npm run test:mobile",
+    
+    "lint:backend": "cd backend && python -m black . && python -m isort .",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:mobile": "cd mobile && npm run lint",
+    "lint:all": "npm run lint:backend && npm run lint:frontend && npm run lint:mobile",
+    
+    "deploy:staging": "echo 'Deploying to The Avant staging environment...'",
+    "deploy:production": "echo 'Deploying to The Avant production environment...'",
+    
+    "elysia:status": "curl -s http://localhost:8000/api/elysia/amenities | jq .",
+    "elysia:logs": "tail -f backend/elysia_concierge.log",
+    
+    "docs:serve": "cd docs && python -m http.server 8080",
+    "docs:build": "echo 'Building documentation for The Avant deployment...'"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0",
+    "python": ">=3.9.0"
+  },
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "mobile"
+  ],
+  "author": "Kairoi Residential Technology Team",
+  "license": "PROPRIETARY - Kairoi Residential Internal Use Only",
+  "config": {
+    "property": {
+      "name": "The Avant",
+      "location": "Centennial, Colorado",
+      "management_company": "Kairoi Residential",
+      "units": 280,
+      "launch_date": "2025-12-01"
+    },
+    "elysia": {
+      "personality": "Professional luxury concierge",
+      "response_time_target": "< 2 seconds",
+      "availability": "24/7",
+      "languages": ["en-US"],
+      "voice_enabled": true
+    }
+  }
+}

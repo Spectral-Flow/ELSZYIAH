@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "name": "elysia-concierge-lite",
+  "builds": [
+    {
+      "src": "backend/elysia_lite.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/elysia_lite.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "backend/elysia_lite.py"
+    }
+  ],
+  "env": {
+    "ENVIRONMENT": "production",
+    "PYTHONPATH": "./backend"
+  },
+  "functions": {
+    "backend/elysia_lite.py": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  }
+}
