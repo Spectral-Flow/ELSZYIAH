@@ -119,7 +119,7 @@ cd ELSZYIAH
 cd backend
 python -m venv venv
 .\venv\Scripts\activate  # Windows
-# Or: source venv/bin/activate  # Linux/Mac
+# Or: source venv/bin/activate  # Linux
 pip install -r requirements-lite.txt
 
 # Run with mock AI (default)
@@ -157,6 +157,24 @@ vercel --prod
 ```
 
 - Set environment variable `ELYSIA_USE_BLOOM=true` for LLM mode (default is mock).
+
+### Production / Vercel guidance
+
+For serverless deployments (Vercel) we strongly recommend using hosted inference rather than bundling heavy ML libraries into your function.
+
+- Use `backend/requirements-vercel.txt` for Vercel deployments to avoid `transformers`/`torch`.
+- Set `ELYSIA_USE_HOSTED=true` and add `ELYSIA_HF_API_KEY` as an environment variable (store as a secret in Vercel or GitHub Actions).
+- CI includes a mocked-hosted adapter test (`tests/test_hosted_adapter.py`) so the hosted adapter is validated without a real key.
+
+To deploy safely to Vercel:
+
+```bash
+# from repo root
+vercel --prod
+# ensure in project settings you set the environment variables:
+# ELYSIA_USE_HOSTED=true
+# ELYSIA_HF_API_KEY=<your-hf-key>
+```
 
 ### 4. API Endpoints
 
