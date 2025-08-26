@@ -167,6 +167,24 @@ vercel --prod
 
 ---
 
+## Secrets & Deployment Notes
+
+To enable hosted LLM inference or automatic Vercel deployments, set the following environment variables in your deployment environment or GitHub Actions secrets:
+
+- `ELYSIA_USE_HOSTED=true` - Enable Hugging Face Inference adapter
+- `ELYSIA_HF_API_KEY` - Your Hugging Face API key (store as a secret)
+- `ELYSIA_HF_MODEL` - Optional: model id to use (default: `bigscience/bloom-560m`)
+
+Vercel automatic deploys from GitHub require a `VERCEL_TOKEN` secret in the repository settings. To add it:
+
+1. Create a personal token at https://vercel.com/account/tokens
+2. In your GitHub repo, go to Settings -> Secrets -> Actions -> New repository secret
+3. Add `VERCEL_TOKEN` with the token value
+
+The GitHub Actions workflow will attempt a Vercel deploy on pushes to `main` if `VERCEL_TOKEN` is present.
+
+---
+
 ## 🔥 Quick Test
 
 ```powershell

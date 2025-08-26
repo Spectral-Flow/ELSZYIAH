@@ -14,9 +14,12 @@ import os
 import json
 import logging
 
-# Optional: BLOOM integration
+# Optional: BLOOM integration (local) and Hosted Hugging Face Inference adapter
 USE_BLOOM = os.environ.get("ELYSIA_USE_BLOOM", "false").lower() == "true"
+USE_HOSTED = os.environ.get("ELYSIA_USE_HOSTED", "false").lower() == "true"
 bloom_pipe = None
+HF_API_KEY = os.environ.get("ELYSIA_HF_API_KEY", "")
+HF_MODEL = os.environ.get("ELYSIA_HF_MODEL", "bigscience/bloom-560m")
 try:
     if USE_BLOOM:
         from transformers import pipeline
@@ -25,6 +28,46 @@ try:
 except Exception as e:
     print(f"BLOOM not available: {e}")
     bloom_pipe = None
+
+
+class HostedBloomAI:
+    """Hosted Hugging Face Inference API adapter"""
+    def __init__(self, api_key: str, model_name: str):
+        self.api_key = api_key
+        self.model = model_name
+        self.endpoint = f"https://api-inference.huggingface.co/models/{self.model}"
+
+    async def generate_response(self, request) -> str:
+        prompt = f"Resident request at The Avant: {request.message}\nType: {request.request_type.value}\nUnit: {request.unit_number}\nReply as a luxury apartment concierge."
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        payload = {
+            "inputs": prompt,
+            "options": {"wait_for_model": True},
+            "parameters": {"max_new_tokens": 128, "temperature": 0.7}
+        }
+        try:
+            # Use requests in a thread to avoid blocking the event loop
+            import requests
+            import asyncio
+
+            def do_post():
+                r = requests.post(self.endpoint, headers=headers, json=payload, timeout=60)
+                r.raise_for_status()
+                return r.json()
+
+            loop = asyncio.get_event_loop()
+            result = await loop.run_in_executor(None, do_post)
+
+            # HF Inference may return list/dict shapes depending on model
+            if isinstance(result, dict) and "generated_text" in result:
+                return result["generated_text"].strip()
+            if isinstance(result, list) and result and isinstance(result[0], dict):
+                if "generated_text" in result[0]:
+                    return result[0]["generated_text"].strip()
+            return str(result)
+        except Exception as e:
+            return f"[Hosted BLOOM error: {e}]"
+
 
 # Request types for The Avant
 class RequestType(str, Enum):
@@ -165,7 +208,11 @@ class ElysiaLiteEngine:
     """Lightweight Elysia engine with intelligent responses"""
     
     def __init__(self):
-        if USE_BLOOM and bloom_pipe:
+        # Engine selection order: hosted LLM -> local BLOOM -> mock
+        if USE_HOSTED and HF_API_KEY:
+            self.ai = HostedBloomAI(HF_API_KEY, HF_MODEL)
+            print("Elysia Concierge: Hosted Hugging Face LLM enabled.")
+        elif USE_BLOOM and bloom_pipe:
             self.ai = BloomAI(bloom_pipe)
             print("Elysia Concierge: BLOOM LLM enabled.")
         else:
@@ -295,12 +342,19 @@ async def get_community_info() -> Dict[str, Any]:
 @app.get("/health")
 async def health_check():
     """Health check"""
+    # Determine current mode for health reporting
+    if USE_HOSTED and HF_API_KEY:
+        mode = "bloom_hosted"
+    elif USE_BLOOM and bloom_pipe:
+        mode = "bloom_local"
+    else:
+        mode = "intelligent_mock"
     return {
         "status": "healthy",
         "service": "Elysia Concierge Lite",
         "property": "The Avant",
         "version": "1.0.0-lite",
-        "mode": "intelligent_mock",
+        "mode": mode,
         "timestamp": datetime.now().isoformat()
     }
 
