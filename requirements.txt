@@ -1,0 +1,8 @@
+# Vercel deployment requirements for Elysia Concierge Lite
+# Lightweight dependencies only (no heavy ML libraries)
+fastapi
+uvicorn
+pydantic
+requests
+python-dateutil==2.8.2
+python-dotenv==1.0.0
