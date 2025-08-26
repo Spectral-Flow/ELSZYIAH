@@ -119,10 +119,14 @@ cd ELSZYIAH
 cd backend
 python -m venv venv
 .\venv\Scripts\activate  # Windows
-# Or: source venv/bin/activate  # Linux/Mac
+# Or: source venv/bin/activate  # Linux
 pip install -r requirements-lite.txt
 
 # Run with mock AI (default)
+python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
+
+# Run with llama-cpp-python (GGUF models)
+$env:ELYSIA_USE_LLAMACPP="true"
 python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
 
 # Run with BLOOM LLM (smallest model)
@@ -143,7 +147,8 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements-lite.txt
 
-# Run server (mock or BLOOM)
+# Run server (mock, llama-cpp, or BLOOM)
+export ELYSIA_USE_LLAMACPP=true  # For llama-cpp-python
 python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
 ```
 
@@ -156,7 +161,27 @@ python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
 vercel --prod
 ```
 
-- Set environment variable `ELYSIA_USE_BLOOM=true` for LLM mode (default is mock).
+- Set environment variable `ELYSIA_USE_BLOOM=true` for BLOOM LLM mode (default is mock).
+- Set environment variable `ELYSIA_USE_LLAMACPP=true` for llama-cpp-python GGUF model support.
+- Set environment variable `ELYSIA_USE_HOSTED=true` for hosted Hugging Face inference.
+
+### Production / Vercel guidance
+
+For serverless deployments (Vercel) we strongly recommend using hosted inference rather than bundling heavy ML libraries into your function.
+
+- Use `backend/requirements-vercel.txt` for Vercel deployments to avoid `transformers`/`torch`.
+- Set `ELYSIA_USE_HOSTED=true` and add `ELYSIA_HF_API_KEY` as an environment variable (store as a secret in Vercel or GitHub Actions).
+- CI includes a mocked-hosted adapter test (`tests/test_hosted_adapter.py`) so the hosted adapter is validated without a real key.
+
+To deploy safely to Vercel:
+
+```bash
+# from repo root
+vercel --prod
+# ensure in project settings you set the environment variables:
+# ELYSIA_USE_HOSTED=true
+# ELYSIA_HF_API_KEY=<your-hf-key>
+```
 
 ### 4. API Endpoints
 
@@ -169,12 +194,23 @@ vercel --prod
 
 ## Secrets & Deployment Notes
 
-To enable hosted LLM inference or automatic Vercel deployments, set the following environment variables in your deployment environment or GitHub Actions secrets:
+To enable hosted LLM inference, automatic Vercel deployments, or llama-cpp-python support, set the following environment variables in your deployment environment or GitHub Actions secrets:
 
+**Hosted Hugging Face Inference:**
 - `ELYSIA_USE_HOSTED=true` - Enable Hugging Face Inference adapter
 - `ELYSIA_HF_API_KEY` - Your Hugging Face API key (store as a secret)
 - `ELYSIA_HF_MODEL` - Optional: model id to use (default: `bigscience/bloom-560m`)
 
+**llama-cpp-python (GGUF Models):**
+- `ELYSIA_USE_LLAMACPP=true` - Enable llama-cpp-python support
+- `ELYSIA_LLAMACPP_REPO_ID` - HuggingFace repo ID (default: `HagalazAI/Elysia-Trismegistus-Mistral-7B-v02-GGUF`)
+- `ELYSIA_LLAMACPP_FILENAME` - GGUF filename (default: `Elysia-Trismegistus-Mistral-7B-v02-IQ3_M.gguf`)
+
+**Local BLOOM Models:**
+- `ELYSIA_USE_BLOOM=true` - Enable local BLOOM model support
+- `ELYSIA_BLOOM_MODEL` - Optional: BLOOM model name (default: `bigscience/bloom-560m`)
+
+**Vercel Deployment:**
 Vercel automatic deploys from GitHub require a `VERCEL_TOKEN` secret in the repository settings. To add it:
 
 1. Create a personal token at https://vercel.com/account/tokens

@@ -14,12 +14,35 @@ import os
 import json
 import logging
 
-# Optional: BLOOM integration (local) and Hosted Hugging Face Inference adapter
+# Optional: AI integrations (llama-cpp, BLOOM, Hosted HF)
+USE_LLAMACPP = os.environ.get("ELYSIA_USE_LLAMACPP", "false").lower() == "true"
 USE_BLOOM = os.environ.get("ELYSIA_USE_BLOOM", "false").lower() == "true"
 USE_HOSTED = os.environ.get("ELYSIA_USE_HOSTED", "false").lower() == "true"
+
+# llama-cpp-python configuration
+LLAMACPP_REPO_ID = os.environ.get("ELYSIA_LLAMACPP_REPO_ID", "HagalazAI/Elysia-Trismegistus-Mistral-7B-v02-GGUF")
+LLAMACPP_FILENAME = os.environ.get("ELYSIA_LLAMACPP_FILENAME", "Elysia-Trismegistus-Mistral-7B-v02-IQ3_M.gguf")
+llamacpp_model = None
+
+# BLOOM configuration
 bloom_pipe = None
 HF_API_KEY = os.environ.get("ELYSIA_HF_API_KEY", "")
 HF_MODEL = os.environ.get("ELYSIA_HF_MODEL", "bigscience/bloom-560m")
+
+try:
+    if USE_LLAMACPP:
+        from llama_cpp import Llama
+        print(f"Loading llama-cpp model: {LLAMACPP_REPO_ID}/{LLAMACPP_FILENAME}")
+        llamacpp_model = Llama.from_pretrained(
+            repo_id=LLAMACPP_REPO_ID,
+            filename=LLAMACPP_FILENAME,
+            verbose=False
+        )
+        print("✅ llama-cpp model loaded successfully for Elysia")
+except Exception as e:
+    print(f"llama-cpp not available: {e}")
+    llamacpp_model = None
+
 try:
     if USE_BLOOM:
         from transformers import pipeline
@@ -204,14 +227,55 @@ class BloomAI:
         except Exception as e:
             return f"[BLOOM error: {e}]"
 
+class LlamaCppAI:
+    """llama-cpp-python AI for GGUF model responses"""
+    def __init__(self, model):
+        self.model = model
+
+    async def generate_response(self, request: ResidentRequest) -> str:
+        # Format prompt for concierge context similar to other AI classes
+        prompt = f"""You are Elysia, a professional concierge at The Avant luxury apartments in Centennial, Colorado. You are helpful, warm, and knowledgeable about apartment living.
+
+Resident from Unit {request.unit_number}: {request.message}
+Request Type: {request.request_type.value}
+
+Elysia:"""
+        
+        try:
+            # Create chat completion using llama-cpp-python
+            response = self.model.create_chat_completion(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are Elysia, a professional concierge at The Avant luxury apartments in Centennial, Colorado. You are helpful, warm, and knowledgeable about apartment living."
+                    },
+                    {
+                        "role": "user", 
+                        "content": f"Unit {request.unit_number} - {request.request_type.value}: {request.message}"
+                    }
+                ],
+                max_tokens=128,
+                temperature=0.7
+            )
+            
+            # Extract the response content
+            content = response["choices"][0]["message"]["content"]
+            return content.strip()
+            
+        except Exception as e:
+            return f"I apologize, but I'm experiencing technical difficulties right now. Please contact our management office directly for immediate assistance. [LlamaCpp error: {e}]"
+
 class ElysiaLiteEngine:
     """Lightweight Elysia engine with intelligent responses"""
     
     def __init__(self):
-        # Engine selection order: hosted LLM -> local BLOOM -> mock
+        # Engine selection order: hosted LLM -> llama-cpp -> local BLOOM -> mock
         if USE_HOSTED and HF_API_KEY:
             self.ai = HostedBloomAI(HF_API_KEY, HF_MODEL)
             print("Elysia Concierge: Hosted Hugging Face LLM enabled.")
+        elif USE_LLAMACPP and llamacpp_model:
+            self.ai = LlamaCppAI(llamacpp_model)
+            print("Elysia Concierge: llama-cpp (GGUF) LLM enabled.")
         elif USE_BLOOM and bloom_pipe:
             self.ai = BloomAI(bloom_pipe)
             print("Elysia Concierge: BLOOM LLM enabled.")

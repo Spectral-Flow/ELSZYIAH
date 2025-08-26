@@ -1,0 +1,11 @@
+# Vercel-safe minimal requirements (no heavy ML libs)
+# Use hosted inference or mock responses for serverless deployment
+fastapi
+uvicorn
+pydantic
+requests
+python-dateutil==2.8.2
+python-dotenv==1.0.0
+
+# Note: llama-cpp-python and transformers are excluded for Vercel
+# Use ELYSIA_USE_HOSTED=true with HF_API_KEY instead
