@@ -1,0 +1,46 @@
+# Vercel deployment ignore file
+# Keep deployments lightweight by excluding development files
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Development dependencies
+backend/requirements-lite.txt
+backend/requirements.txt
+
+# Tests
+tests/
+test_*.py
+*_test.py
+pytest.ini
+
+# Development files
+demo_*.py
+scripts/
+
+# Documentation
+docs/
+README.md
+
+# Git
+.git/
+.gitignore
+
+# Mobile and frontend (not needed for API deployment)
+mobile/
+frontend/
+
+# Environment files (use Vercel dashboard for env vars)
+.env*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log
