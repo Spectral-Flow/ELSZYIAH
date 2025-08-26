@@ -10,6 +10,9 @@ pydantic
 transformers
 torch
 
+# llama-cpp-python for GGUF model support
+llama-cpp-python
+
 # Essential utilities
 python-dateutil==2.8.2
 python-dotenv==1.0.0

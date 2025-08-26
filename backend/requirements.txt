@@ -14,6 +14,9 @@ accelerate==0.24.1
 numpy==1.24.3
 scipy==1.11.3
 
+# llama-cpp-python for GGUF model support
+llama-cpp-python
+
 # Audio Processing (Whisper integration)
 openai-whisper==20231117
 librosa==0.10.1
