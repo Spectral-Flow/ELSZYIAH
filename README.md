@@ -106,18 +106,71 @@ Gain actionable analytics on resident preferences and engagement.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Setup & Deployment Instructions
+
+### 1. Local Development (Windows/Linux)
+
+```powershell
+# Clone the repo
+git clone https://github.com/Spectral-Flow/ELSZYIAH.git
+cd ELSZYIAH
+
+# Install Python dependencies (lite version)
+cd backend
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+# Or: source venv/bin/activate  # Linux/Mac
+pip install -r requirements-lite.txt
+
+# Run with mock AI (default)
+python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
+
+# Run with BLOOM LLM (smallest model)
+$env:ELYSIA_USE_BLOOM="true"
+python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
+```
+
+### 2. Mobile/Termux (Android)
 
 ```bash
-# Clone the repository
-git clone https://github.com/kairoi-residential/elysia-concierge.git
-cd elysia-concierge
+# Install Termux packages
+pkg update && pkg install python git
 
-# Setup development environment
-npm run setup:dev
+# Clone and setup
+git clone https://github.com/Spectral-Flow/ELSZYIAH.git
+cd ELSZYIAH/backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements-lite.txt
 
-# Start development servers
-npm run dev:all
+# Run server (mock or BLOOM)
+python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
+```
+
+### 3. Vercel Cloud Deployment
+
+- Edit `vercel.json` to use `backend/elysia_lite.py`.
+- Push to GitHub, then run:
+
+```bash
+vercel --prod
+```
+
+- Set environment variable `ELYSIA_USE_BLOOM=true` for LLM mode (default is mock).
+
+### 4. API Endpoints
+
+- `POST /api/elysia/request` — Concierge chat
+- `GET /api/elysia/amenities` — Amenity info
+- `GET /api/elysia/community` — Community info
+- `GET /health` — Health check
+
+---
+
+## 🔥 Quick Test
+
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/api/elysia/request" -Method POST -ContentType "application/json" -Body '{"resident_id": "AVT-RES-304-001", "unit_number": "304", "request_type": "maintenance", "message": "My kitchen faucet is leaking", "priority": "medium"}'
 ```
 
 ---

@@ -14,6 +14,18 @@ import os
 import json
 import logging
 
+# Optional: BLOOM integration
+USE_BLOOM = os.environ.get("ELYSIA_USE_BLOOM", "false").lower() == "true"
+bloom_pipe = None
+try:
+    if USE_BLOOM:
+        from transformers import pipeline
+        bloom_model_name = os.environ.get("ELYSIA_BLOOM_MODEL", "bigscience/bloom-560m")
+        bloom_pipe = pipeline("text-generation", model=bloom_model_name, device=-1)
+except Exception as e:
+    print(f"BLOOM not available: {e}")
+    bloom_pipe = None
+
 # Request types for The Avant
 class RequestType(str, Enum):
     MAINTENANCE = "maintenance"
@@ -136,11 +148,29 @@ class IntelligentMockAI:
         else:
             return f"Hello! I'm Elysia, your personal concierge at The Avant. I'm here 24/7 to help with maintenance requests, amenity bookings, package tracking, guest access, local recommendations, and anything else you need. How can I make your day at The Avant better?"
 
+class BloomAI:
+    """BLOOM-powered AI for real LLM responses"""
+    def __init__(self, pipe):
+        self.pipe = pipe
+
+    async def generate_response(self, request: ResidentRequest) -> str:
+        prompt = f"Resident request at The Avant: {request.message}\nType: {request.request_type.value}\nUnit: {request.unit_number}\nReply as a luxury apartment concierge."
+        try:
+            result = self.pipe(prompt, max_new_tokens=128, do_sample=True, temperature=0.7)
+            return result[0]["generated_text"].strip()
+        except Exception as e:
+            return f"[BLOOM error: {e}]"
+
 class ElysiaLiteEngine:
     """Lightweight Elysia engine with intelligent responses"""
     
     def __init__(self):
-        self.ai = IntelligentMockAI()
+        if USE_BLOOM and bloom_pipe:
+            self.ai = BloomAI(bloom_pipe)
+            print("Elysia Concierge: BLOOM LLM enabled.")
+        else:
+            self.ai = IntelligentMockAI()
+            print("Elysia Concierge: Using intelligent mock responses.")
         self.active_requests = {}
         
         # Setup logging
@@ -218,8 +248,18 @@ async def submit_request(data: ResidentRequest) -> ConciergeResponse:
 @app.get("/api/elysia/amenities")
 async def get_amenities() -> Dict[str, Any]:
     """Get The Avant amenities"""
+    amenities = [
+        "Fitness Center (24/7)",
+        "Swimming Pool (6 AM - 10 PM)",
+        "Clubhouse (6 AM - 11 PM)",
+        "Coworking Spaces (24/7)",
+        "Rooftop Terrace (6 AM - 11 PM)",
+        "Pet Park (24/7)",
+        "Package Room (24/7)",
+        "EV Charging Stations"
+    ]
     return {
-        "amenities": elysia_engine.ai.the_avant_knowledge["amenities"],
+        "amenities": amenities,
         "operating_hours": {
             "fitness_center": "24/7",
             "pool": "6 AM - 10 PM",
@@ -233,6 +273,12 @@ async def get_amenities() -> Dict[str, Any]:
 @app.get("/api/elysia/community")
 async def get_community_info() -> Dict[str, Any]:
     """Get The Avant community info"""
+    building_info = {
+        "total_units": 280,
+        "floors": 12,
+        "built": 2023,
+        "style": "Luxury modern apartments"
+    }
     return {
         "property_name": "The Avant",
         "location": "Centennial, Colorado",
@@ -243,7 +289,7 @@ async def get_community_info() -> Dict[str, Any]:
             "Premium Shopping - Cherry Creek Mall",
             "Dining - Centennial Promenade"
         ],
-        "building_info": elysia_engine.ai.the_avant_knowledge["building_info"]
+        "building_info": building_info
     }
 
 @app.get("/health")
