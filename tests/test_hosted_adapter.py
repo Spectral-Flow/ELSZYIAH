@@ -1,7 +1,9 @@
 import pytest
 import types
 import json
+import sys
 
+sys.path.append('backend')
 from backend.elysia_lite import HostedBloomAI, ResidentRequest, RequestType
 
 class DummyResponse:

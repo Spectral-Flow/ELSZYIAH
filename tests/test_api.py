@@ -1,6 +1,8 @@
 import pytest
+import sys
 from fastapi.testclient import TestClient
 
+sys.path.append('backend')
 from backend.elysia_lite import app
 
 client = TestClient(app)
