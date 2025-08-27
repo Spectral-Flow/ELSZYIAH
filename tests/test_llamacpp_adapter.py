@@ -6,11 +6,16 @@ import os
 import asyncio
 from unittest.mock import Mock, patch
 import pytest
-import sys
 
-sys.path.append('backend')
+# Check if llama_cpp is available
+try:
+    import llama_cpp
+    LLAMA_CPP_AVAILABLE = True
+except ImportError:
+    LLAMA_CPP_AVAILABLE = False
 
 
+@pytest.mark.skipif(not LLAMA_CPP_AVAILABLE, reason="llama-cpp-python not installed")
 def test_llamacpp_adapter_monkeypatch():
     """Test llama-cpp adapter with mocked model to avoid downloads"""
     
@@ -78,6 +83,7 @@ def test_llamacpp_adapter_monkeypatch():
             del os.environ["ELYSIA_USE_LLAMACPP"]
 
 
+@pytest.mark.skipif(not LLAMA_CPP_AVAILABLE, reason="llama-cpp-python not installed")
 def test_llamacpp_error_handling():
     """Test that llama-cpp errors are handled gracefully"""
     
@@ -106,6 +112,7 @@ def test_llamacpp_error_handling():
     assert "[LlamaCpp error:" in result
 
 
+@pytest.mark.skipif(not LLAMA_CPP_AVAILABLE, reason="llama-cpp-python not installed")
 def test_llamacpp_engine_selection():
     """Test that engine properly selects llama-cpp when configured"""
     
