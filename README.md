@@ -1,234 +1,353 @@
-# Elysia Concierge
-## The Future of Luxury Apartment Living
+# Elysia Concierge 🏗️✨
 
-**Kairoi Residential | The Avant, Centennial, Colorado**
+**AI-powered concierge system for The Avant luxury apartments - Kairoi Residential**
 
----
+[![CI/CD](https://github.com/Spectral-Flow/ELSZYIAH/actions/workflows/ci.yml/badge.svg)](https://github.com/Spectral-Flow/ELSZYIAH/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://python.org)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## 🏢 Vision Statement
+> **🎯 Mission**: Transform ordinary apartment living into an extraordinary lifestyle experience through AI-powered hospitality and intelligent automation.
 
-Elysia Concierge reimagines apartment living by blending cutting-edge AI technology with boutique hospitality. More than software—it's a new standard for modern luxury living that transforms The Avant into a connected, intelligent community.
+## 🌟 What Makes This Legendary
 
-### The Bold Truth
-- 👉 Elysia Concierge redefines what it means to live well
-- 👉 It transforms apartments into sanctuaries of connection and care  
-- 👉 It makes technology invisible, so the experience feels entirely human
+- **🧠 Multi-AI Engine Support**: Mock, llama-cpp, BLOOM, OpenAI, Azure OpenAI
+- **🏗️ Production-Ready Architecture**: FastAPI, PostgreSQL, Redis, Docker
+- **🔒 Security First**: Pre-commit hooks, security scanning, environment validation
+- **🧪 Comprehensive Testing**: Unit, integration, API, and performance tests  
+- **📦 One-Command Setup**: Automated development environment configuration
+- **🐳 Docker Support**: Full containerized development stack
+- **📊 Monitoring & Health**: Built-in health checks and observability
+- **🔄 CI/CD Pipeline**: Automated testing, security, and deployment
 
----
+## 🚀 Lightning-Fast Setup
 
-## 🌊 Why Now?
+### Option 1: Automated Setup (Recommended)
 
-**AI Isn't Going Away - Either Board the Ship—Or Be Lost at Sea**
+```bash
+# Clone and setup in one go
+git clone https://github.com/Spectral-Flow/ELSZYIAH.git
+cd ELSZYIAH
+./setup.sh
+```
 
-The world is changing faster than ever. Residents already expect AI-powered experiences:
-- Voice assistants in their homes
-- Predictive recommendations on their devices
-- Seamless services at their fingertips
+### Option 2: Manual Setup
 
-**The choice is simple:**
-- ⚓ Get on board now and sail toward the future
-- 🌊 Or drift behind, lost in the current of innovation
-
----
-
-## ✨ Resident Benefits
-
-### 🌙 24/7 Concierge Access
-Always on, always ready. Request maintenance, book amenities, or ask questions anytime—without waiting for office hours.
-
-### 🌐 Community Connection  
-A central hub for life at The Avant—updates, announcements, and events, all in one place. Where residents feel connected, not isolated.
-
-### ⚡ Smart Lifestyle Integration
-Future-ready features that adapt:
-- Voice interaction
-- Personalized recommendations  
-- Energy optimization
-- Predictive maintenance
-
----
-
-## 📈 Management Value
-
-### ✅ Higher Resident Satisfaction
-Delight residents with instant responses and personalized service. Happier residents renew leases and leave glowing reviews.
-
-### ⚙️ Streamlined Operations
-Automate routine requests like maintenance tickets, amenity bookings, and community updates.
-
-### 🌟 Brand Differentiation
-Position The Avant as a tech-forward, boutique experience in Centennial's competitive market.
-
-### 💡 Data-Driven Insights
-Gain actionable analytics on resident preferences and engagement.
-
----
-
-## 🏗️ Technical Architecture
-
-### Core Components
-- **Creative Core**: AI personality with hospitality focus
-- **Property Management Integration**: Maintenance, amenities, leasing
-- **Community Platform**: Events, announcements, neighbor connections
-- **Mobile App**: iOS/Android native experience
-- **Voice Interface**: Hands-free interaction
-- **Analytics Dashboard**: Management insights
-
-### Technology Stack
-- **Backend**: Python (Starlite) + mistral.rs
-- **Frontend**: SvelteKit progressive web app
-- **Mobile**: React Native (iOS/Android)
-- **AI Models**: Open-source (Mistral, Phi-2)
-- **Database**: PostgreSQL + Redis
-- **Voice**: Whisper.cpp + Coqui TTS
-
----
-
-## 🎯 Development Roadmap
-
-### Phase 1: Core Concierge (Q4 2025)
-- [ ] Basic resident portal
-- [ ] Maintenance request system
-- [ ] Amenity booking
-- [ ] Community announcements
-
-### Phase 2: Intelligence Layer (Q1 2026)
-- [ ] AI-powered responses
-- [ ] Predictive maintenance
-- [ ] Personalized recommendations
-- [ ] Voice interface
-
-### Phase 3: Smart Building Integration (Q2 2026)
-- [ ] IoT device connectivity
-- [ ] Energy optimization
-- [ ] Automated workflows
-- [ ] Advanced analytics
-
----
-
-## 🚀 Setup & Deployment Instructions
-
-### 1. Local Development (Windows/Linux)
-
-```powershell
-# Clone the repo
+```bash
+# Clone repository
 git clone https://github.com/Spectral-Flow/ELSZYIAH.git
 cd ELSZYIAH
 
-# Install Python dependencies (lite version)
-cd backend
-python -m venv venv
-.\venv\Scripts\activate  # Windows
-# Or: source venv/bin/activate  # Linux
-pip install -r requirements-lite.txt
-
-# Run with mock AI (default)
-python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
-
-# Run with llama-cpp-python (GGUF models)
-$env:ELYSIA_USE_LLAMACPP="true"
-python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
-
-# Run with BLOOM LLM (smallest model)
-$env:ELYSIA_USE_BLOOM="true"
-python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
-```
-
-### 2. Mobile/Termux (Android)
-
-```bash
-# Install Termux packages
-pkg update && pkg install python git
-
-# Clone and setup
-git clone https://github.com/Spectral-Flow/ELSZYIAH.git
-cd ELSZYIAH/backend
-python -m venv venv
+# Quick setup
+make install-dev
 source venv/bin/activate
-pip install -r requirements-lite.txt
 
-# Run server (mock, llama-cpp, or BLOOM)
-export ELYSIA_USE_LLAMACPP=true  # For llama-cpp-python
-python -m uvicorn elysia_lite:app --host 0.0.0.0 --port 8000
+# Start development server
+make dev
 ```
 
-### 3. Vercel Cloud Deployment
-
-- Edit `vercel.json` to use `backend/elysia_lite.py`.
-- Push to GitHub, then run:
+### Option 3: Docker Setup
 
 ```bash
-vercel --prod
+# Full environment with database
+docker-compose up --build
+
+# API only
+docker-compose up elysia-api
 ```
 
-- Set environment variable `ELYSIA_USE_BLOOM=true` for BLOOM LLM mode (default is mock).
-- Set environment variable `ELYSIA_USE_LLAMACPP=true` for llama-cpp-python GGUF model support.
-- Set environment variable `ELYSIA_USE_HOSTED=true` for hosted Hugging Face inference.
+## 🎮 Quick Commands
 
-### Production / Vercel guidance
+| Command | Description |
+|---------|-------------|
+| `make dev` | Start with mock AI (instant) |
+| `make dev-llamacpp` | Start with llama-cpp models |
+| `make dev-bloom` | Start with BLOOM models |
+| `make test` | Run comprehensive test suite |
+| `make demo` | Interactive demo sequence |
+| `make health` | Check system health |
+| `make format` | Auto-format code |
+| `make security` | Security scan |
 
-For serverless deployments (Vercel) we strongly recommend using hosted inference rather than bundling heavy ML libraries into your function.
+## 🏗️ Architecture Overview
 
-- Use `backend/requirements-vercel.txt` for Vercel deployments to avoid `transformers`/`torch`.
-- Set `ELYSIA_USE_HOSTED=true` and add `ELYSIA_HF_API_KEY` as an environment variable (store as a secret in Vercel or GitHub Actions).
-- CI includes a mocked-hosted adapter test (`tests/test_hosted_adapter.py`) so the hosted adapter is validated without a real key.
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Mobile App    │    │   API Gateway   │
+│  (SvelteKit)    │    │ (React Native)  │    │   (FastAPI)     │
+└─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
+          │                      │                      │
+          └──────────────────────┼──────────────────────┘
+                                 │
+                    ┌─────────────┴───────────┐
+                    │    Elysia AI Core      │
+                    │  (Multi-Engine Support) │
+                    └─────────────┬───────────┘
+                                 │
+          ┌──────────────────────┼──────────────────────┐
+          │                      │                      │
+┌─────────▼───────┐    ┌─────────▼───────┐    ┌─────────▼───────┐
+│   PostgreSQL    │    │      Redis      │    │   External APIs │
+│   (Database)    │    │     (Cache)     │    │ (Property Mgmt) │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
 
-To deploy safely to Vercel:
+## 🎯 AI Engine Options
+
+### 🚀 Instant Development (Default)
+```bash
+make dev  # Uses intelligent mock AI
+```
+
+### 🧠 Local AI Models  
+```bash
+# BLOOM (smallest, fastest)
+make dev-bloom
+
+# llama-cpp (GGUF models, powerful)
+make dev-llamacpp
+```
+
+### ☁️ Cloud AI Services
+```bash
+# Hosted Hugging Face
+ELYSIA_USE_HOSTED=true make dev
+
+# Azure OpenAI (production recommended)
+ELYSIA_USE_AZURE_OPENAI=true make dev
+```
+
+## 🏠 The Avant Features
+
+### 🤖 AI Concierge Capabilities
+- **Maintenance Requests**: "My kitchen faucet is leaking"
+- **Amenity Booking**: "Reserve the fitness center for 7 AM"
+- **Package Inquiries**: "Is my Amazon delivery ready?"
+- **Guest Access**: "Add visitor access for John Smith today"
+- **Community Events**: "What's happening this weekend?"
+- **Local Recommendations**: Cherry Creek, Centennial area knowledge
+
+### 🏢 Property Management
+- **280 Units** across 12 floors
+- **Premium Amenities**: Fitness center, pool, clubhouse, coworking
+- **Smart Building**: IoT integration, access control
+- **Location Intelligence**: Centennial, CO area expertise
+
+## 🧪 Testing Strategy
 
 ```bash
-# from repo root
+# Run all tests
+make test
+
+# Coverage report
+make test-cov
+
+# Integration tests
+make test-integration
+
+# API endpoint tests  
+make test-api
+
+# Watch mode for development
+make test-watch
+```
+
+## 🔒 Security & Quality
+
+### Automated Code Quality
+- **Black**: Code formatting
+- **isort**: Import sorting  
+- **flake8**: Linting
+- **mypy**: Type checking
+- **bandit**: Security scanning
+- **pre-commit**: Git hooks
+
+### Security Features
+- Environment variable validation
+- SQL injection prevention
+- CORS configuration
+- Rate limiting ready
+- Secrets detection
+
+## 📊 Monitoring & Health
+
+### Health Checks
+```bash
+# Application health
+curl http://localhost:8000/health
+
+# API status  
+curl http://localhost:8000/api/elysia/amenities
+
+# System check
+make health
+```
+
+### Observability
+- Structured logging
+- Prometheus metrics ready
+- Health check endpoints
+- Error tracking integration
+
+## 🐳 Docker Development
+
+### Full Stack
+```bash
+# Complete environment
+docker-compose --profile frontend --profile admin up
+
+# Database admin at http://localhost:5050
+# Redis admin at http://localhost:8081
+```
+
+### Services Available
+- **elysia-api**: Main application
+- **postgres**: Database
+- **redis**: Cache  
+- **pgadmin**: Database admin
+- **redis-commander**: Redis admin
+
+## 🌍 Environment Configuration
+
+Copy `.env.example` to `.env` and customize:
+
+```bash
+# Core Settings
+ENVIRONMENT=development
+DEBUG=true
+SECRET_KEY=your-secure-secret-key
+
+# AI Configuration  
+ELYSIA_USE_LLAMACPP=false
+ELYSIA_USE_BLOOM=false
+AZURE_OPENAI_API_KEY=your-key-here
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/elysia
+REDIS_URL=redis://localhost:6379/0
+```
+
+## 📚 API Documentation
+
+### Interactive Documentation
+- **Swagger UI**: http://localhost:8000/docs
+- **Redoc**: http://localhost:8000/redoc
+
+### Key Endpoints
+- `POST /api/elysia/request` - Submit resident request
+- `GET /api/elysia/amenities` - Get amenity information
+- `GET /api/elysia/community` - Community & building info
+- `GET /health` - Application health check
+
+### Example Request
+```bash
+curl -X POST "http://localhost:8000/api/elysia/request" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "resident_id": "AVT-RES-304-001",
+    "unit_number": "304", 
+    "request_type": "maintenance",
+    "message": "Kitchen faucet is leaking",
+    "priority": "medium"
+  }'
+```
+
+## 🚀 Deployment
+
+### Development
+```bash
+make dev                    # Local development
+docker-compose up          # Containerized development
+```
+
+### Production
+```bash
+# Vercel (API deployment)
 vercel --prod
-# ensure in project settings you set the environment variables:
-# ELYSIA_USE_HOSTED=true
-# ELYSIA_HF_API_KEY=<your-hf-key>
+
+# Docker (full stack)
+docker-compose -f docker-compose.prod.yml up
 ```
 
-### 4. API Endpoints
+### Environment Variables for Production
+Set these in your deployment platform:
 
-- `POST /api/elysia/request` — Concierge chat
-- `GET /api/elysia/amenities` — Amenity info
-- `GET /api/elysia/community` — Community info
-- `GET /health` — Health check
-
----
-
-## Secrets & Deployment Notes
-
-To enable hosted LLM inference, automatic Vercel deployments, or llama-cpp-python support, set the following environment variables in your deployment environment or GitHub Actions secrets:
-
-**Hosted Hugging Face Inference:**
-- `ELYSIA_USE_HOSTED=true` - Enable Hugging Face Inference adapter
-- `ELYSIA_HF_API_KEY` - Your Hugging Face API key (store as a secret)
-- `ELYSIA_HF_MODEL` - Optional: model id to use (default: `bigscience/bloom-560m`)
-
-**llama-cpp-python (GGUF Models):**
-- `ELYSIA_USE_LLAMACPP=true` - Enable llama-cpp-python support
-- `ELYSIA_LLAMACPP_REPO_ID` - HuggingFace repo ID (default: `HagalazAI/Elysia-Trismegistus-Mistral-7B-v02-GGUF`)
-- `ELYSIA_LLAMACPP_FILENAME` - GGUF filename (default: `Elysia-Trismegistus-Mistral-7B-v02-IQ3_M.gguf`)
-
-**Local BLOOM Models:**
-- `ELYSIA_USE_BLOOM=true` - Enable local BLOOM model support
-- `ELYSIA_BLOOM_MODEL` - Optional: BLOOM model name (default: `bigscience/bloom-560m`)
-
-**Vercel Deployment:**
-Vercel automatic deploys from GitHub require a `VERCEL_TOKEN` secret in the repository settings. To add it:
-
-1. Create a personal token at https://vercel.com/account/tokens
-2. In your GitHub repo, go to Settings -> Secrets -> Actions -> New repository secret
-3. Add `VERCEL_TOKEN` with the token value
-
-The GitHub Actions workflow will attempt a Vercel deploy on pushes to `main` if `VERCEL_TOKEN` is present.
-
----
-
-## 🔥 Quick Test
-
-```powershell
-Invoke-RestMethod -Uri "http://localhost:8000/api/elysia/request" -Method POST -ContentType "application/json" -Body '{"resident_id": "AVT-RES-304-001", "unit_number": "304", "request_type": "maintenance", "message": "My kitchen faucet is leaking", "priority": "medium"}'
+```bash
+ENVIRONMENT=production
+SECRET_KEY=your-production-secret
+DATABASE_URL=your-production-db-url
+AZURE_OPENAI_API_KEY=your-production-ai-key
+SENTRY_DSN=your-error-tracking-dsn
 ```
 
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+
+- Development workflow
+- Code style guidelines  
+- Testing requirements
+- Pull request process
+
+### Quick Contribution Setup
+```bash
+git clone https://github.com/Spectral-Flow/ELSZYIAH.git
+cd ELSZYIAH
+./setup.sh
+make dev
+# Make your changes
+make test
+make format
+git commit -m "feat: your amazing feature"
+```
+
+## 📋 Project Structure
+
+```
+ELSZYIAH/
+├── backend/              # FastAPI application
+│   ├── elysia_lite.py   # Main application
+│   ├── elysia_concierge.py  # Full version
+│   └── requirements*.txt
+├── frontend/            # SvelteKit frontend (planned)
+├── mobile/              # React Native app (planned)
+├── tests/               # Test suite
+├── docs/                # Documentation
+├── scripts/             # Automation scripts
+├── docker-compose.yml   # Development environment
+├── Makefile            # Task automation
+├── pyproject.toml      # Python configuration
+└── .env.example        # Environment template
+```
+
+## 🏆 Success Metrics
+
+### Resident Experience
+- **Response Time**: < 2 seconds for AI responses
+- **Resolution Rate**: > 90% first-contact resolution
+- **Satisfaction**: > 4.5/5.0 average rating
+- **Engagement**: > 80% monthly active users
+
+### Technical Performance
+- **Uptime**: 99.9% availability SLA
+- **API Performance**: < 500ms response times
+- **Scalability**: 500+ concurrent users
+- **Security**: Zero data breaches
+
+## 📞 Support & Resources
+
+- **Documentation**: [docs/](docs/)
+- **API Reference**: http://localhost:8000/docs
+- **Issues**: GitHub Issues
+- **Discussions**: GitHub Discussions
+- **Security**: Report privately to security team
+
+## 📄 License
+
+This project is proprietary software owned by Kairoi Residential. All rights reserved.
+
 ---
 
-**Elysia Concierge: Where technology, hospitality, and design converge to transform ordinary apartment life into an extraordinary lifestyle experience.**
+**🏗️ Built with ❤️ for The Avant residents by Kairoi Residential Technology Team**
 
-*Built with ❤️ for The Avant residents by Kairoi Residential*
+*Transforming apartment living through AI-powered hospitality and innovation* ✨

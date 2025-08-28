@@ -4,8 +4,9 @@ Elysia Concierge Lite - Startup Script
 Simple startup without uvicorn complications
 """
 
-from elysia_lite import app
 import uvicorn
+
+from elysia_lite import app
 
 if __name__ == "__main__":
     print("🏢 Elysia Concierge Lite for The Avant")
@@ -13,14 +14,9 @@ if __name__ == "__main__":
     print("🚀 Server will run on http://localhost:8000")
     print("📱 Mobile/Vercel optimized")
     print("=" * 50)
-    
+
     try:
-        uvicorn.run(
-            app,
-            host="0.0.0.0",
-            port=8000,
-            log_level="info"
-        )
+        uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
     except KeyboardInterrupt:
         print("\n👋 Server stopped by user")
     except Exception as e:
