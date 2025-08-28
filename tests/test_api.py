@@ -1,8 +1,9 @@
-import pytest
 import sys
+
+import pytest
 from fastapi.testclient import TestClient
 
-sys.path.append('backend')
+sys.path.append("backend")
 from backend.elysia_lite import app
 
 client = TestClient(app)
@@ -38,11 +39,10 @@ def test_submit_request_maintenance():
         "unit_number": "101",
         "request_type": "maintenance",
         "message": "My sink is leaking",
-        "priority": "medium"
+        "priority": "medium",
     }
     r = client.post("/api/elysia/request", json=payload)
     assert r.status_code == 200
     data = r.json()
     assert "response" in data
     assert "request_id" in data
-
