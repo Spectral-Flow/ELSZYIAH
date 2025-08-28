@@ -23,7 +23,7 @@
     "setup:tools": "npm install && npx husky install",
     
     "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:mobile\"",
-    "dev:backend": "cd backend && python -m starlite run elysia_concierge:app --reload --host 0.0.0.0 --port 8000",
+    "dev:backend": "cd backend && python -m uvicorn elysia_lite:app --reload --host 0.0.0.0 --port 8000",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:mobile": "cd mobile && npx react-native start",
     "dev:mobile:ios": "cd mobile && npx react-native run-ios",
@@ -33,7 +33,7 @@
     "build:mobile:ios": "cd mobile && npx react-native run-ios --configuration Release",
     "build:mobile:android": "cd mobile && npx react-native run-android --variant release",
     
-    "test:backend": "cd backend && python -m pytest tests/ -v",
+    "test:backend": "python -m pytest tests/ -v",
     "test:frontend": "cd frontend && npm run test",
     "test:mobile": "cd mobile && npm test",
     "test:all": "npm run test:backend && npm run test:frontend && npm run test:mobile",
