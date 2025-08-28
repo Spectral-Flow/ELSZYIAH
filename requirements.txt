@@ -1,8 +1,24 @@
-# Vercel deployment requirements for Elysia Concierge Lite
-# Lightweight dependencies only (no heavy ML libraries)
+# Core dependencies for Vercel deployment
 fastapi
-uvicorn
+uvicorn[standard]
 pydantic
 requests
 python-dateutil==2.8.2
 python-dotenv==1.0.0
+
+# Additional dependencies for full functionality
+httpx  # For TestClient
+pytest  # For testing
+pytest-asyncio  # For async tests
+pytest-cov  # For test coverage
+
+# Development dependencies
+black  # Code formatting
+isort  # Import sorting
+mypy  # Type checking
+flake8  # Linting
+
+# Optional AI dependencies (comment out for lightweight deployment)
+# transformers  # For BLOOM models
+# torch  # Required by transformers
+# llama-cpp-python  # For local GGUF models

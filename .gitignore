@@ -3,11 +3,54 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+venv/
+.env
+.env.*
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+.next/
+.vercel/
+*.tsbuildinfo
 
 # Editor
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
+*.tmp
+*.temp
+
+# Test coverage
+coverage/
+.coverage
+.nyc_output
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.cache/
+.parcel-cache/
+.pytest_cache/

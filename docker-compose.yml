@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Elysia Concierge Backend
+  elysia-backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - ELYSIA_USE_MOCK=true
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - elysia-network
+    
+  # Redis Cache (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - elysia-network
+    
+  # PostgreSQL Database (optional)
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: elysia_concierge
+      POSTGRES_USER: elysia
+      POSTGRES_PASSWORD: secure_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - elysia-network
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  elysia-network:
+    driver: bridge

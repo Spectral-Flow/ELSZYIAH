@@ -16,10 +16,11 @@
     "url": "https://github.com/kairoi-residential/elysia-concierge.git"
   },
   "scripts": {
-    "setup:dev": "npm run setup:backend && npm run setup:frontend && npm run setup:mobile",
+    "setup:dev": "npm run setup:backend && npm run setup:frontend && npm run setup:mobile && npm run setup:tools",
     "setup:backend": "cd backend && python -m venv venv && pip install -r requirements.txt",
     "setup:frontend": "cd frontend && npm install",
     "setup:mobile": "cd mobile && npm install && npx pod-install ios",
+    "setup:tools": "npm install && npx husky install",
     
     "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:mobile\"",
     "dev:backend": "cd backend && python -m starlite run elysia_concierge:app --reload --host 0.0.0.0 --port 8000",
@@ -37,10 +38,16 @@
     "test:mobile": "cd mobile && npm test",
     "test:all": "npm run test:backend && npm run test:frontend && npm run test:mobile",
     
-    "lint:backend": "cd backend && python -m black . && python -m isort .",
+    "lint:backend": "cd backend && python -m black . && python -m isort . && python -m mypy .",
     "lint:frontend": "cd frontend && npm run lint",
     "lint:mobile": "cd mobile && npm run lint",
     "lint:all": "npm run lint:backend && npm run lint:frontend && npm run lint:mobile",
+    "lint:check": "npm run lint:check:backend && npm run lint:check:frontend",
+    "lint:check:backend": "cd backend && python -m black --check . && python -m isort --check-only .",
+    "lint:check:frontend": "eslint . --ext .js,.jsx,.ts,.tsx && prettier --check .",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && python -m black . && python -m isort .",
+    "format:frontend": "prettier --write .",
     
     "deploy:staging": "echo 'Deploying to The Avant staging environment...'",
     "deploy:production": "echo 'Deploying to The Avant production environment...'",
@@ -53,7 +60,15 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3"
   },
   "engines": {
     "node": ">=20.0.0",
@@ -82,5 +97,23 @@
       "languages": ["en-US"],
       "voice_enabled": true
     }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.py": [
+      "black",
+      "isort"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
